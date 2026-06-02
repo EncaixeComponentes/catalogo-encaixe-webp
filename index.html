@@ -4,796 +4,224 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Catálogo de Fotos | Encaixe</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --navy:    #0B2D5B;
-      --navy-2:  #0d3568;
-      --navy-3:  #071d3c;
-      --gold:    #FFCC00;
-      --gold-2:  #e6b800;
-      --bg:      #f0f3f9;
-      --surface: #ffffff;
-      --text:    #0f1c2e;
-      --muted:   #7a8ba3;
-      --border:  #dde4ef;
-      --blue-xs: #eef4ff;
-      --blue-sm: #dbeafe;
-      --erro:    #c0392b;
-
-      --radius-card: 20px;
-      --radius-sm: 12px;
-      --radius-pill: 999px;
-
-      --shadow-card: 0 4px 20px rgba(11,45,91,.08), 0 1px 4px rgba(11,45,91,.05);
-      --shadow-card-hover: 0 12px 40px rgba(11,45,91,.14), 0 2px 8px rgba(11,45,91,.08);
-      --shadow-panel: 0 8px 32px rgba(11,45,91,.1);
-    }
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: #f4f6f9; color: #111; min-height: 100vh; }
 
-    html { scroll-behavior: smooth; }
+    /* HEADER */
+    header { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-mark { width: 36px; height: 36px; background: #0B2D5B; color: #FFCC00; border-radius: 8px; display: grid; place-items: center; font-weight: 700; font-size: 16px; flex-shrink: 0; }
+    .brand-name { font-size: 15px; font-weight: 600; color: #0B2D5B; }
+    .brand-sub { font-size: 12px; color: #6b7280; margin-top: 1px; }
+    #totalBadge { font-size: 13px; color: #6b7280; white-space: nowrap; }
+    #totalBadge strong { color: #0B2D5B; }
 
-    body {
-      font-family: 'DM Sans', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
+    /* TOOLBAR */
+    .toolbar { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 12px 24px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 400px; }
+    .search-ico { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: #9ca3af; font-size: 15px; pointer-events: none; }
+    input[type=search] { width: 100%; height: 38px; border: 1px solid #d1d5db; border-radius: 8px; padding: 0 12px 0 36px; font-family: inherit; font-size: 13.5px; color: #111; outline: none; background: #fff; }
+    input[type=search]:focus { border-color: #0B2D5B; }
+    input[type=search]::placeholder { color: #9ca3af; }
+    select { height: 38px; border: 1px solid #d1d5db; border-radius: 8px; padding: 0 12px; font-family: inherit; font-size: 13.5px; color: #374151; outline: none; background: #fff; cursor: pointer; }
+    select:focus { border-color: #0B2D5B; }
+    .btn-clear { height: 38px; padding: 0 14px; border: 1px solid #d1d5db; border-radius: 8px; background: #fff; color: #6b7280; font-family: inherit; font-size: 13px; cursor: pointer; }
+    .btn-clear:hover { background: #f9fafb; }
+    #countText { font-size: 13px; color: #6b7280; margin-left: auto; }
+    #countText strong { color: #111; }
+
+    /* LAYOUT */
+    .layout { display: flex; gap: 0; max-width: 1400px; margin: 0 auto; }
+
+    /* SIDEBAR */
+    .sidebar { width: 210px; flex-shrink: 0; background: #fff; border-right: 1px solid #e5e7eb; min-height: calc(100vh - 113px); padding: 16px 12px; }
+    .sidebar-label { font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: #9ca3af; margin-bottom: 8px; padding: 0 4px; }
+    .cat-btn { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 7px 10px; border-radius: 7px; border: none; background: transparent; font-family: inherit; font-size: 13px; color: #374151; cursor: pointer; text-align: left; }
+    .cat-btn:hover { background: #f3f4f6; }
+    .cat-btn.active { background: #eff4ff; color: #0B2D5B; font-weight: 600; }
+    .cat-count { font-size: 12px; color: #9ca3af; }
+    .cat-btn.active .cat-count { color: #3b82f6; }
+
+    /* CONTENT */
+    .content { flex: 1; padding: 20px; min-width: 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+
+    /* CARD */
+    .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; transition: box-shadow .15s; }
+    .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.1); }
+    .photo-box { height: 180px; background: #f9fafb; display: flex; align-items: center; justify-content: center; padding: 12px; }
+    .photo-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .img-fallback { display: none; flex-direction: column; align-items: center; gap: 6px; color: #9ca3af; font-size: 12px; text-align: center; }
+    .card-body { padding: 12px; display: flex; flex-direction: column; gap: 8px; flex: 1; border-top: 1px solid #f3f4f6; }
+    .prod-name { font-size: 13px; font-weight: 500; line-height: 1.35; color: #111; }
+    .cat-tag { display: inline-block; font-size: 11px; background: #eff4ff; color: #2563eb; padding: 2px 8px; border-radius: 999px; font-weight: 500; align-self: flex-start; }
+    .card-actions { display: grid; gap: 6px; margin-top: auto; padding-top: 4px; }
+    .btn-dl { display: flex; align-items: center; justify-content: center; gap: 6px; height: 34px; border-radius: 7px; font-family: inherit; font-size: 12.5px; font-weight: 600; text-decoration: none; }
+    .btn-dl.primary { background: #0B2D5B; color: #fff; }
+    .btn-dl.primary:hover { background: #163D73; }
+    .btn-dl.secondary { background: #fff; color: #374151; border: 1px solid #d1d5db; }
+    .btn-dl.secondary:hover { background: #f9fafb; }
+
+    /* STATES */
+    .empty { display: none; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 80px 20px; color: #9ca3af; font-size: 14px; text-align: center; }
+    .skeleton { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; }
+    .sk-img { height: 180px; background: linear-gradient(90deg,#f3f4f6 25%,#e5e7eb 50%,#f3f4f6 75%); background-size:200% 100%; animation: sk 1.4s infinite; }
+    .sk-body { padding: 12px; display: grid; gap: 8px; }
+    .sk-line { height: 11px; border-radius: 4px; background: linear-gradient(90deg,#f3f4f6 25%,#e5e7eb 50%,#f3f4f6 75%); background-size:200% 100%; animation: sk 1.4s infinite; }
+    .sk-line.s { width: 55%; }
+    @keyframes sk { from{background-position:200% 0} to{background-position:-200% 0} }
+
+    footer { text-align: center; padding: 24px; color: #9ca3af; font-size: 12px; border-top: 1px solid #e5e7eb; }
+
+    @media (max-width: 860px) {
+      .sidebar { display: none; }
+      .toolbar { gap: 8px; }
+      #countText { width: 100%; margin-left: 0; }
     }
-
-    /* ─── HEADER ─── */
-    header {
-      background: var(--navy-3);
-      background-image:
-        radial-gradient(ellipse 80% 60% at 50% -20%, rgba(255,204,0,.12) 0%, transparent 70%),
-        radial-gradient(ellipse 40% 80% at 80% 50%, rgba(22,61,115,.6) 0%, transparent 60%);
-      color: #fff;
-      padding: 48px 24px 80px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    header::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-      pointer-events: none;
-    }
-
-    .header-inner {
-      position: relative;
-      z-index: 1;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 22px;
-    }
-
-    .brand-mark {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: var(--gold);
-      color: var(--navy-3);
-      display: grid;
-      place-items: center;
-      font-family: 'Sora', sans-serif;
-      font-weight: 800;
-      font-size: 20px;
-      letter-spacing: -.01em;
-      flex-shrink: 0;
-    }
-
-    .brand-name {
-      font-family: 'Sora', sans-serif;
-      font-weight: 700;
-      font-size: 15px;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,.75);
-    }
-
-    h1 {
-      font-family: 'Sora', sans-serif;
-      font-size: clamp(30px, 5vw, 52px);
-      font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -.02em;
-      color: #fff;
-    }
-
-    h1 span {
-      color: var(--gold);
-    }
-
-    .subtitle {
-      margin: 14px auto 0;
-      max-width: 520px;
-      color: rgba(255,255,255,.55);
-      font-size: 15px;
-      font-weight: 400;
-      line-height: 1.6;
-    }
-
-    #totalProdutos {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 20px;
-      padding: 8px 18px;
-      border-radius: var(--radius-pill);
-      background: rgba(255,255,255,.1);
-      border: 1px solid rgba(255,255,255,.15);
-      color: rgba(255,255,255,.8);
-      font-size: 13px;
-      font-weight: 600;
-      backdrop-filter: blur(4px);
-    }
-
-    #totalProdutos::before {
-      content: '';
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--gold);
-      flex-shrink: 0;
-    }
-
-    /* ─── MAIN ─── */
-    main {
-      max-width: 1320px;
-      margin: -44px auto 56px;
-      padding: 0 20px;
-    }
-
-    /* ─── PANEL ─── */
-    .panel {
-      background: var(--surface);
-      border-radius: var(--radius-card);
-      box-shadow: var(--shadow-panel);
-      padding: 20px 22px 18px;
-      margin-bottom: 24px;
-    }
-
-    .controls {
-      display: grid;
-      grid-template-columns: 1fr auto auto;
-      gap: 10px;
-      align-items: stretch;
-    }
-
-    .search-wrap {
-      position: relative;
-      flex: 1;
-    }
-
-    .search-icon {
-      position: absolute;
-      left: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 18px;
-      height: 18px;
-      color: var(--muted);
-      pointer-events: none;
-    }
-
-    input[type="search"],
-    select {
-      font-family: 'DM Sans', sans-serif;
-      height: 50px;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      background: #fafbfd;
-      color: var(--text);
-      font-size: 15px;
-      font-weight: 400;
-      outline: none;
-      transition: border-color .18s, box-shadow .18s, background .18s;
-      width: 100%;
-    }
-
-    input[type="search"]:focus,
-    select:focus {
-      border-color: var(--navy);
-      box-shadow: 0 0 0 3px rgba(11,45,91,.1);
-      background: #fff;
-    }
-
-    input[type="search"] { padding: 0 16px 0 48px; }
-    select {
-      padding: 0 36px 0 14px;
-      appearance: none;
-      -webkit-appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a8ba3' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      cursor: pointer;
-      min-width: 210px;
-    }
-
-    #clearFilters {
-      font-family: 'DM Sans', sans-serif;
-      height: 50px;
-      padding: 0 22px;
-      border: none;
-      border-radius: var(--radius-sm);
-      background: var(--navy);
-      color: #fff;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background .18s, transform .1s;
-      white-space: nowrap;
-      letter-spacing: .02em;
-    }
-
-    #clearFilters:hover { background: var(--navy-2); }
-    #clearFilters:active { transform: scale(.97); }
-
-    .meta {
-      margin-top: 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    #countText {
-      font-size: 13.5px;
-      font-weight: 600;
-      color: var(--muted);
-    }
-
-    #countText strong {
-      color: var(--navy);
-    }
-
-    .meta-source {
-      font-size: 12px;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .meta-source svg {
-      opacity: .5;
-    }
-
-    /* ─── GRID ─── */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 20px;
-    }
-
-    /* ─── CARD ─── */
-    .card {
-      background: var(--surface);
-      border-radius: var(--radius-card);
-      overflow: hidden;
-      box-shadow: var(--shadow-card);
-      display: flex;
-      flex-direction: column;
-      transition: transform .22s cubic-bezier(.22,1,.36,1), box-shadow .22s cubic-bezier(.22,1,.36,1);
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-card-hover);
-    }
-
-    .photo-box {
-      height: 230px;
-      background: #f5f7fc;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .photo-box::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 30px;
-      background: linear-gradient(to top, rgba(255,255,255,.5), transparent);
-      pointer-events: none;
-    }
-
-    .photo-box img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      display: block;
-      transition: transform .3s cubic-bezier(.22,1,.36,1);
-    }
-
-    .card:hover .photo-box img {
-      transform: scale(1.04);
-    }
-
-    .image-fallback {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .image-fallback svg {
-      opacity: .35;
-    }
-
-    .content {
-      padding: 16px 18px 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      flex: 1;
-      border-top: 1px solid #f2f4f8;
-    }
-
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 8px;
-    }
-
-    .product-name {
-      font-family: 'Sora', sans-serif;
-      font-size: 13.5px;
-      line-height: 1.35;
-      font-weight: 700;
-      color: var(--text);
-      flex: 1;
-    }
-
-    .category {
-      display: inline-flex;
-      align-self: flex-start;
-      font-size: 11px;
-      letter-spacing: .03em;
-      color: var(--navy);
-      background: var(--blue-xs);
-      padding: 4px 10px;
-      border-radius: var(--radius-pill);
-      font-weight: 700;
-      white-space: nowrap;
-      text-transform: uppercase;
-      border: 1px solid var(--blue-sm);
-      flex-shrink: 0;
-    }
-
-    .btns {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 8px;
-      margin-top: auto;
-    }
-
-    a.btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      min-height: 42px;
-      border-radius: 10px;
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 700;
-      font-family: 'DM Sans', sans-serif;
-      transition: all .18s ease;
-      letter-spacing: .01em;
-    }
-
-    .primary {
-      background: var(--navy);
-      color: #fff;
-    }
-
-    .primary:hover {
-      background: var(--navy-2);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(11,45,91,.25);
-    }
-
-    .secondary {
-      background: var(--blue-xs);
-      color: var(--navy);
-      border: 1.5px solid var(--blue-sm);
-      padding: 0 14px;
-    }
-
-    .secondary:hover {
-      background: var(--blue-sm);
-      border-color: #93c5fd;
-    }
-
-    /* ─── SKELETON ─── */
-    .skeleton-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 20px;
-    }
-
-    .skeleton-card {
-      background: var(--surface);
-      border-radius: var(--radius-card);
-      overflow: hidden;
-      box-shadow: var(--shadow-card);
-    }
-
-    .skeleton-photo {
-      height: 230px;
-      background: linear-gradient(90deg, #f0f3f9 25%, #e4e9f5 50%, #f0f3f9 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-    }
-
-    .skeleton-body {
-      padding: 16px 18px 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .skeleton-line {
-      border-radius: 6px;
-      background: linear-gradient(90deg, #f0f3f9 25%, #e4e9f5 50%, #f0f3f9 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-    }
-
-    @keyframes shimmer {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-
-    /* ─── EMPTY / ERROR STATE ─── */
-    .state {
-      grid-column: 1 / -1;
-      padding: 56px 24px;
-      text-align: center;
-      background: var(--surface);
-      border-radius: var(--radius-card);
-      box-shadow: var(--shadow-card);
-    }
-
-    .state-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
-      background: var(--blue-xs);
-      display: grid;
-      place-items: center;
-      margin: 0 auto 16px;
-      color: var(--navy);
-    }
-
-    .state strong {
-      display: block;
-      font-family: 'Sora', sans-serif;
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 6px;
-    }
-
-    .state p {
-      color: var(--muted);
-      font-size: 14px;
-      max-width: 340px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
-
-    .error { color: var(--erro); }
-
-    /* ─── FOOTER ─── */
-    footer {
-      text-align: center;
-      color: var(--muted);
-      font-size: 13px;
-      padding: 0 20px 40px;
-      line-height: 1.6;
-    }
-
-    footer strong {
-      color: var(--navy);
-      font-weight: 600;
-    }
-
-    /* ─── RESPONSIVE ─── */
-    @media (max-width: 1100px) {
-      .grid, .skeleton-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    }
-
-    @media (max-width: 780px) {
-      main { margin-top: -32px; }
-      .controls { grid-template-columns: 1fr 1fr; }
-      .search-wrap { grid-column: 1 / -1; }
-      .grid, .skeleton-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-      .photo-box { height: 185px; }
-      header { padding: 36px 20px 72px; }
-      .panel { padding: 16px; }
-    }
-
-    @media (max-width: 480px) {
-      main { padding: 0 14px; }
-      .grid, .skeleton-grid { grid-template-columns: 1fr; gap: 12px; }
-      .photo-box { height: 260px; }
-      .controls { grid-template-columns: 1fr; }
-      select { min-width: unset; }
-      .btns { grid-template-columns: 1fr 1fr; }
+    @media (max-width: 540px) {
+      .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .content { padding: 14px; }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <div class="header-inner">
-      <div class="brand">
-        <span class="brand-mark">E</span>
-        <span class="brand-name">Encaixe Componentes</span>
-      </div>
-      <h1>Catálogo de <span>Fotos</span></h1>
-      <p class="subtitle">Encontre, visualize e baixe as fotos dos produtos para enviar aos seus clientes.</p>
-      <p id="totalProdutos">Carregando catálogo…</p>
+<header>
+  <div class="brand">
+    <div class="brand-mark">E</div>
+    <div>
+      <div class="brand-name">Encaixe Componentes</div>
+      <div class="brand-sub">Catálogo de Fotos</div>
     </div>
-  </header>
+  </div>
+  <div id="totalBadge">Carregando...</div>
+</header>
 
-  <main>
-    <section class="panel">
-      <div class="controls">
-        <div class="search-wrap">
-          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-          </svg>
-          <input id="searchInput" type="search" placeholder="Pesquisar produto ou categoria…" autocomplete="off" />
-        </div>
+<div class="toolbar">
+  <div class="search-wrap">
+    <span class="search-ico">⌕</span>
+    <input id="searchInput" type="search" placeholder="Buscar produto ou categoria..." autocomplete="off" />
+  </div>
+  <select id="categorySelect"><option value="">Todas as categorias</option></select>
+  <button class="btn-clear" id="clearBtn" type="button">Limpar</button>
+  <span id="countText"></span>
+</div>
 
-        <select id="categorySelect">
-          <option value="">Todas as categorias</option>
-        </select>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-label">Categorias</div>
+    <div id="catList"></div>
+  </aside>
+  <div class="content">
+    <div id="loadingGrid" class="grid">
+      <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line"></div><div class="sk-line s"></div></div></div>
+      <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line"></div><div class="sk-line s"></div></div></div>
+      <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line"></div><div class="sk-line s"></div></div></div>
+      <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line"></div><div class="sk-line s"></div></div></div>
+      <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line"></div><div class="sk-line s"></div></div></div>
+      <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line"></div><div class="sk-line s"></div></div></div>
+    </div>
+    <div id="catalog" class="grid" style="display:none;"></div>
+    <div id="emptyState" class="empty">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <span>Nenhum produto encontrado</span>
+    </div>
+  </div>
+</div>
 
-        <button id="clearFilters" type="button">Limpar filtros</button>
-      </div>
+<footer>Catálogo interno Encaixe · Atualizado automaticamente via Google Sheets</footer>
 
-      <div class="meta">
-        <span id="countText">Carregando produtos…</span>
-        <span class="meta-source">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/>
-          </svg>
-          Fonte: Google Sheets + Google Drive
-        </span>
-      </div>
-    </section>
+<script>
+(function(){
+  const CSV = "/api/produtos";
+  let products = [], activeCat = "", timer = null;
+  const $=id=>document.getElementById(id);
+  const catalogEl=$("catalog"), loadingEl=$("loadingGrid"), emptyEl=$("emptyState"),
+        searchEl=$("searchInput"), selectEl=$("categorySelect"),
+        countEl=$("countText"), totalEl=$("totalBadge"),
+        clearBtn=$("clearBtn"), catList=$("catList");
 
-    <!-- Skeleton loading -->
-    <div id="skeletonGrid" class="skeleton-grid">
-      ${Array(8).fill(0).map(() => `
-        <div class="skeleton-card">
-          <div class="skeleton-photo"></div>
-          <div class="skeleton-body">
-            <div class="skeleton-line" style="height:16px;width:80%"></div>
-            <div class="skeleton-line" style="height:14px;width:55%"></div>
-            <div class="skeleton-line" style="height:42px;margin-top:6px;border-radius:10px"></div>
+  function norm(v){return String(v??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();}
+  function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+  function driveId(u){const s=String(u??"");let m=s.match(/\/d\/([^/?#]+)/);if(m)return m[1];m=s.match(/[?&]id=([^&]+)/);return m?m[1]:"";}
+  function imgUrl(p){const id=driveId(p.foto)||driveId(p.download);return id?`/api/imagem?id=${encodeURIComponent(id)}&w=600`:p.foto;}
+  function viewUrl(p){const id=driveId(p.foto)||driveId(p.download);return id?`https://drive.google.com/file/d/${id}/view`:p.foto;}
+  function dlUrl(p){const id=driveId(p.foto)||driveId(p.download);return id?`https://drive.google.com/uc?export=download&id=${id}`:(p.download||p.foto);}
+
+  function parseCSV(t){const rows=[];let row=[],val="",q=false;for(let i=0;i<t.length;i++){const c=t[i],n=t[i+1];if(c==='"'&&q&&n==='"'){val+='"';i++;}else if(c==='"'){q=!q;}else if(c===','&&!q){row.push(val);val="";}else if((c==='\n'||c==='\r')&&!q){if(c==='\r'&&n==='\n')i++;row.push(val);rows.push(row);row=[];val="";}else val+=c;}if(val||row.length){row.push(val);rows.push(row);}return rows.filter(r=>r.some(c=>c.trim()!=""));}
+
+  function catCounts(){const m=new Map();products.forEach(p=>m.set(p.categoria,(m.get(p.categoria)||0)+1));return[...m.entries()].sort((a,b)=>a[0].localeCompare(b[0],"pt-BR"));}
+
+  function buildUI(){
+    const cats=catCounts();
+    selectEl.innerHTML='<option value="">Todas as categorias</option>'+cats.map(([c,n])=>`<option value="${esc(c)}">${esc(c)} (${n})</option>`).join("");
+    catList.innerHTML=`<button class="cat-btn ${!activeCat?'active':''}" data-cat=""><span>Todas</span><span class="cat-count">${products.length}</span></button>`+cats.map(([c,n])=>`<button class="cat-btn ${activeCat===c?'active':''}" data-cat="${esc(c)}"><span>${esc(c)}</span><span class="cat-count">${n}</span></button>`).join("");
+  }
+
+  function setCat(cat){activeCat=cat??"";selectEl.value=activeCat;buildUI();render();}
+
+  function render(){
+    const term=norm(searchEl.value);
+    const list=products.filter(p=>(!activeCat||p.categoria===activeCat)&&(!term||norm(p.produto).includes(term)||norm(p.categoria).includes(term)));
+    countEl.innerHTML=`<strong>${list.length.toLocaleString("pt-BR")}</strong> de ${products.length.toLocaleString("pt-BR")} produtos`;
+    if(!list.length){catalogEl.style.display="none";emptyEl.style.display="flex";return;}
+    emptyEl.style.display="none";catalogEl.style.display="grid";
+    catalogEl.innerHTML=list.map(p=>`
+      <article class="card">
+        <div class="photo-box">
+          <img src="${esc(imgUrl(p))}" alt="${esc(p.produto)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+          <div class="img-fallback">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            Sem imagem
           </div>
         </div>
-      `).join('')}
-    </div>
-
-    <section id="catalog" class="grid" style="display:none;"></section>
-
-    <div id="emptyState" style="display:none;" class="grid">
-      <div class="state">
-        <div class="state-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-            <path d="M8 11h6M11 8v6" opacity=".4"/>
-          </svg>
+        <div class="card-body">
+          <div class="prod-name">${esc(p.produto)}</div>
+          <div class="cat-tag">${esc(p.categoria)}</div>
+          <div class="card-actions">
+            <a class="btn-dl primary" href="${esc(dlUrl(p))}" target="_blank" rel="noopener">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Baixar
+            </a>
+            <a class="btn-dl secondary" href="${esc(viewUrl(p))}" target="_blank" rel="noopener">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              Visualizar
+            </a>
+          </div>
         </div>
-        <strong>Nenhum produto encontrado</strong>
-        <p>Tente um termo diferente ou limpe os filtros para ver todos os produtos.</p>
-      </div>
-    </div>
-  </main>
+      </article>`).join("");
+  }
 
-  <footer>
-    <strong>Encaixe Componentes</strong> · Catálogo interno · Atualizado automaticamente pela planilha publicada.
-  </footer>
+  function debounce(fn){clearTimeout(timer);timer=setTimeout(fn,180);}
 
-  <script>
-    const CSV_URL = "/api/produtos";
-
-    const catalogEl       = document.getElementById("catalog");
-    const emptyStateEl    = document.getElementById("emptyState");
-    const skeletonGrid    = document.getElementById("skeletonGrid");
-    const searchInput     = document.getElementById("searchInput");
-    const categorySelect  = document.getElementById("categorySelect");
-    const countText       = document.getElementById("countText");
-    const totalProdutos   = document.getElementById("totalProdutos");
-    const clearFilters    = document.getElementById("clearFilters");
-
-    let products = [];
-
-    function parseCSV(text) {
-      const rows = [];
-      let current = [], value = "", insideQuotes = false;
-      for (let i = 0; i < text.length; i++) {
-        const char = text[i], next = text[i + 1];
-        if (char === '"' && insideQuotes && next === '"') { value += '"'; i++; }
-        else if (char === '"') { insideQuotes = !insideQuotes; }
-        else if (char === ',' && !insideQuotes) { current.push(value); value = ""; }
-        else if ((char === "\n" || char === "\r") && !insideQuotes) {
-          if (char === "\r" && next === "\n") i++;
-          current.push(value); rows.push(current); current = []; value = "";
-        } else { value += char; }
-      }
-      if (value || current.length) { current.push(value); rows.push(current); }
-      return rows.filter(row => row.some(cell => String(cell).trim() !== ""));
+  async function load(){
+    try{
+      const res=await fetch(CSV+"?t="+Date.now());
+      if(!res.ok)throw new Error("HTTP "+res.status);
+      const text=await res.text();
+      const rows=parseCSV(text);
+      const headers=rows.shift().map(h=>norm(h));
+      const idx={produto:headers.findIndex(h=>h==="produto"),categoria:headers.findIndex(h=>h==="categoria"),foto:headers.findIndex(h=>h.includes("link da foto")||h==="foto"),download:headers.findIndex(h=>h.includes("link de download")||h==="download")};
+      products=rows.map(r=>({produto:(r[idx.produto]??"").trim(),categoria:(r[idx.categoria]??"").trim(),foto:(r[idx.foto]??"").trim(),download:(r[idx.download]??"").trim()})).filter(p=>p.produto&&(p.foto||p.download));
+      totalEl.innerHTML=`<strong>${products.length.toLocaleString("pt-BR")}</strong> produtos`;
+      buildUI();loadingEl.style.display="none";render();
+    }catch(e){
+      console.error(e);
+      loadingEl.style.display="none";
+      totalEl.textContent="Erro ao carregar";
+      emptyEl.style.display="flex";
+      emptyEl.querySelector("span").textContent="Erro ao carregar. Verifique /api/produtos.";
     }
+  }
 
-    function normalize(v) {
-      return String(v || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
-    }
-
-    function escapeHTML(v) {
-      return String(v || "")
-        .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;").replaceAll("'","&#039;");
-    }
-
-    function extractDriveId(url) {
-      const text = String(url || "");
-      for (const pat of [/[?&]id=([^&]+)/, /\/file\/d\/([^/]+)/, /\/d\/([^/]+)/]) {
-        const m = text.match(pat);
-        if (m && m[1]) return decodeURIComponent(m[1]);
-      }
-      return "";
-    }
-
-    function imageUrl(product) {
-      const id = extractDriveId(product.foto) || extractDriveId(product.download);
-      if (id) return `/api/imagem?id=${encodeURIComponent(id)}`;
-      return product.foto;
-    }
-
-    function downloadUrl(product) { return product.download || product.foto; }
-
-    function sortProducts(list) {
-      return [...list].sort((a, b) => {
-        const c = String(a.categoria).localeCompare(String(b.categoria), "pt-BR", { sensitivity: "base" });
-        return c !== 0 ? c : String(a.produto).localeCompare(String(b.produto), "pt-BR", { sensitivity: "base" });
-      });
-    }
-
-    function setupCategories() {
-      const cats = [...new Set(products.map(p => p.categoria).filter(Boolean))]
-        .sort((a, b) => a.localeCompare(b, "pt-BR", { sensitivity: "base" }));
-      categorySelect.innerHTML = '<option value="">Todas as categorias</option>' +
-        cats.map(cat => {
-          const total = products.filter(p => p.categoria === cat).length;
-          return `<option value="${escapeHTML(cat)}">${escapeHTML(cat)} (${total})</option>`;
-        }).join("");
-    }
-
-    function render() {
-      const term     = normalize(searchInput.value);
-      const category = categorySelect.value;
-
-      const filtered = sortProducts(products.filter(p => {
-        const matchesTerm = !term || normalize(p.produto).includes(term) || normalize(p.categoria).includes(term);
-        const matchesCat  = !category || p.categoria === category;
-        return matchesTerm && matchesCat;
-      }));
-
-      countText.innerHTML = filtered.length === products.length
-        ? `<strong>${products.length}</strong> produtos no catálogo`
-        : `<strong>${filtered.length}</strong> de <strong>${products.length}</strong> produtos encontrados`;
-
-      emptyStateEl.style.display = filtered.length ? "none" : "grid";
-      catalogEl.style.display    = filtered.length ? "grid" : "none";
-
-      catalogEl.innerHTML = filtered.map(p => {
-        const foto = imageUrl(p), dl = downloadUrl(p);
-        return `
-          <article class="card">
-            <div class="photo-box">
-              <img
-                src="${escapeHTML(foto)}"
-                alt="${escapeHTML(p.produto)}"
-                loading="lazy"
-                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-              />
-              <div class="image-fallback">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-                Imagem indisponível
-              </div>
-            </div>
-            <div class="content">
-              <div class="card-header">
-                <div class="product-name">${escapeHTML(p.produto)}</div>
-                <span class="category">${escapeHTML(p.categoria)}</span>
-              </div>
-              <div class="btns">
-                <a class="btn primary" href="${escapeHTML(dl)}" target="_blank" rel="noopener">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                  Baixar foto
-                </a>
-                <a class="btn secondary" href="${escapeHTML(p.foto)}" target="_blank" rel="noopener" title="Visualizar">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                </a>
-              </div>
-            </div>
-          </article>`;
-      }).join("");
-    }
-
-    async function loadProducts() {
-      try {
-        const res = await fetch(CSV_URL + "?cacheBust=" + Date.now());
-        if (!res.ok) throw new Error("Falha ao carregar CSV");
-
-        const text    = await res.text();
-        const rows    = parseCSV(text);
-        const headers = rows.shift().map(h => normalize(h));
-
-        const idxProduto  = headers.findIndex(h => h === "produto");
-        const idxCategoria= headers.findIndex(h => h === "categoria");
-        const idxFoto     = headers.findIndex(h => h.includes("link da foto") || h === "foto");
-        const idxDownload = headers.findIndex(h => h.includes("link de download") || h === "download");
-
-        products = sortProducts(rows.map(row => ({
-          produto:   row[idxProduto]   || "",
-          categoria: row[idxCategoria] || "",
-          foto:      row[idxFoto]      || "",
-          download:  row[idxDownload]  || ""
-        })).filter(p => p.produto && (p.foto || p.download)));
-
-        totalProdutos.textContent = `${products.length} produtos cadastrados`;
-        skeletonGrid.style.display = "none";
-        setupCategories();
-        render();
-      } catch (err) {
-        console.error(err);
-        skeletonGrid.style.display = "none";
-        totalProdutos.textContent  = "Erro ao carregar catálogo";
-        countText.innerHTML        = '<span class="error">Não foi possível carregar os produtos.</span>';
-        emptyStateEl.style.display = "grid";
-        emptyStateEl.querySelector("strong").textContent = "Erro ao carregar catálogo";
-        emptyStateEl.querySelector("p").textContent      = "Verifique se a API /api/produtos está funcionando.";
-      }
-    }
-
-    searchInput.addEventListener("input", render);
-    categorySelect.addEventListener("change", render);
-    clearFilters.addEventListener("click", () => {
-      searchInput.value = "";
-      categorySelect.value = "";
-      render();
-      searchInput.focus();
-    });
-
-    loadProducts();
-  </script>
+  searchEl.addEventListener("input",()=>debounce(render));
+  selectEl.addEventListener("change",e=>setCat(e.target.value));
+  clearBtn.addEventListener("click",()=>{searchEl.value="";setCat("");});
+  catList.addEventListener("click",e=>{const b=e.target.closest(".cat-btn");if(b)setCat(b.dataset.cat??"");});
+  load();
+})();
+</script>
 </body>
 </html>
