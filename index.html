@@ -4,224 +4,563 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Catálogo de Fotos | Encaixe</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', system-ui, sans-serif; background: #f4f6f9; color: #111; min-height: 100vh; }
-
-    /* HEADER */
-    header { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-    .brand { display: flex; align-items: center; gap: 10px; }
-    .brand-mark { width: 36px; height: 36px; background: #0B2D5B; color: #FFCC00; border-radius: 8px; display: grid; place-items: center; font-weight: 700; font-size: 16px; flex-shrink: 0; }
-    .brand-name { font-size: 15px; font-weight: 600; color: #0B2D5B; }
-    .brand-sub { font-size: 12px; color: #6b7280; margin-top: 1px; }
-    #totalBadge { font-size: 13px; color: #6b7280; white-space: nowrap; }
-    #totalBadge strong { color: #0B2D5B; }
-
-    /* TOOLBAR */
-    .toolbar { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 12px 24px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 400px; }
-    .search-ico { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: #9ca3af; font-size: 15px; pointer-events: none; }
-    input[type=search] { width: 100%; height: 38px; border: 1px solid #d1d5db; border-radius: 8px; padding: 0 12px 0 36px; font-family: inherit; font-size: 13.5px; color: #111; outline: none; background: #fff; }
-    input[type=search]:focus { border-color: #0B2D5B; }
-    input[type=search]::placeholder { color: #9ca3af; }
-    select { height: 38px; border: 1px solid #d1d5db; border-radius: 8px; padding: 0 12px; font-family: inherit; font-size: 13.5px; color: #374151; outline: none; background: #fff; cursor: pointer; }
-    select:focus { border-color: #0B2D5B; }
-    .btn-clear { height: 38px; padding: 0 14px; border: 1px solid #d1d5db; border-radius: 8px; background: #fff; color: #6b7280; font-family: inherit; font-size: 13px; cursor: pointer; }
-    .btn-clear:hover { background: #f9fafb; }
-    #countText { font-size: 13px; color: #6b7280; margin-left: auto; }
-    #countText strong { color: #111; }
-
-    /* LAYOUT */
-    .layout { display: flex; gap: 0; max-width: 1400px; margin: 0 auto; }
-
-    /* SIDEBAR */
-    .sidebar { width: 210px; flex-shrink: 0; background: #fff; border-right: 1px solid #e5e7eb; min-height: calc(100vh - 113px); padding: 16px 12px; }
-    .sidebar-label { font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: #9ca3af; margin-bottom: 8px; padding: 0 4px; }
-    .cat-btn { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 7px 10px; border-radius: 7px; border: none; background: transparent; font-family: inherit; font-size: 13px; color: #374151; cursor: pointer; text-align: left; }
-    .cat-btn:hover { background: #f3f4f6; }
-    .cat-btn.active { background: #eff4ff; color: #0B2D5B; font-weight: 600; }
-    .cat-count { font-size: 12px; color: #9ca3af; }
-    .cat-btn.active .cat-count { color: #3b82f6; }
-
-    /* CONTENT */
-    .content { flex: 1; padding: 20px; min-width: 0; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
-
-    /* CARD */
-    .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; transition: box-shadow .15s; }
-    .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.1); }
-    .photo-box { height: 180px; background: #f9fafb; display: flex; align-items: center; justify-content: center; padding: 12px; }
-    .photo-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
-    .img-fallback { display: none; flex-direction: column; align-items: center; gap: 6px; color: #9ca3af; font-size: 12px; text-align: center; }
-    .card-body { padding: 12px; display: flex; flex-direction: column; gap: 8px; flex: 1; border-top: 1px solid #f3f4f6; }
-    .prod-name { font-size: 13px; font-weight: 500; line-height: 1.35; color: #111; }
-    .cat-tag { display: inline-block; font-size: 11px; background: #eff4ff; color: #2563eb; padding: 2px 8px; border-radius: 999px; font-weight: 500; align-self: flex-start; }
-    .card-actions { display: grid; gap: 6px; margin-top: auto; padding-top: 4px; }
-    .btn-dl { display: flex; align-items: center; justify-content: center; gap: 6px; height: 34px; border-radius: 7px; font-family: inherit; font-size: 12.5px; font-weight: 600; text-decoration: none; }
-    .btn-dl.primary { background: #0B2D5B; color: #fff; }
-    .btn-dl.primary:hover { background: #163D73; }
-    .btn-dl.secondary { background: #fff; color: #374151; border: 1px solid #d1d5db; }
-    .btn-dl.secondary:hover { background: #f9fafb; }
-
-    /* STATES */
-    .empty { display: none; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 80px 20px; color: #9ca3af; font-size: 14px; text-align: center; }
-    .skeleton { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; }
-    .sk-img { height: 180px; background: linear-gradient(90deg,#f3f4f6 25%,#e5e7eb 50%,#f3f4f6 75%); background-size:200% 100%; animation: sk 1.4s infinite; }
-    .sk-body { padding: 12px; display: grid; gap: 8px; }
-    .sk-line { height: 11px; border-radius: 4px; background: linear-gradient(90deg,#f3f4f6 25%,#e5e7eb 50%,#f3f4f6 75%); background-size:200% 100%; animation: sk 1.4s infinite; }
-    .sk-line.s { width: 55%; }
-    @keyframes sk { from{background-position:200% 0} to{background-position:-200% 0} }
-
-    footer { text-align: center; padding: 24px; color: #9ca3af; font-size: 12px; border-top: 1px solid #e5e7eb; }
-
-    @media (max-width: 860px) {
-      .sidebar { display: none; }
-      .toolbar { gap: 8px; }
-      #countText { width: 100%; margin-left: 0; }
+    :root {
+      --azul: #0B2D5B;
+      --azul-2: #163D73;
+      --amarelo: #FFCC00;
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --texto: #111827;
+      --muted: #6b7280;
+      --borda: #e6eaf0;
+      --erro: #b91c1c;
     }
-    @media (max-width: 540px) {
-      .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-      .content { padding: 14px; }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--texto);
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--azul), #061a36);
+      color: #fff;
+      padding: 30px 18px 42px;
+      text-align: center;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      font-weight: 900;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--amarelo);
+      color: var(--azul);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 46px);
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      margin: 10px auto 0;
+      max-width: 760px;
+      color: #dbe7ff;
+      font-size: 15px;
+    }
+
+    #totalProdutos {
+      margin: 12px auto 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 32px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    main {
+      max-width: 1280px;
+      margin: -26px auto 48px;
+      padding: 0 18px;
+    }
+
+    .panel {
+      background: #fff;
+      border: 1px solid var(--borda);
+      border-radius: 18px;
+      box-shadow: 0 12px 30px rgba(11,45,91,.12);
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) minmax(190px, 290px) 110px;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .search-wrap, .select-wrap { position: relative; }
+
+    input, select, button {
+      font-family: inherit;
+    }
+
+    input, select {
+      width: 100%;
+      height: 48px;
+      border: 1px solid var(--borda);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--texto);
+      font-size: 15px;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--azul);
+      box-shadow: 0 0 0 3px rgba(11,45,91,.12);
+    }
+
+    input { padding: 0 15px 0 44px; }
+    select { padding: 0 14px; }
+
+    .search-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 18px;
+      pointer-events: none;
+    }
+
+    #clearFilters {
+      width: 100%;
+      height: 48px;
+      border: none;
+      border-radius: 12px;
+      background: var(--azul);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: .18s ease;
+    }
+
+    #clearFilters:hover { background: var(--azul-2); }
+
+    .meta {
+      margin-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    #countText {
+      font-weight: 800;
+      color: var(--azul);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--borda);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 6px 18px rgba(0,0,0,.06);
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(0,0,0,.09);
+    }
+
+    .photo-box {
+      height: 220px;
+      background: #fbfcff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      border-bottom: 1px solid #f0f2f6;
+    }
+
+    .photo-box img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .image-fallback {
+      display: none;
+      width: 100%;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 12px;
+    }
+
+    .content {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .product-name {
+      font-size: 14px;
+      line-height: 1.28;
+      font-weight: 900;
+      min-height: 38px;
+    }
+
+    .category {
+      display: inline-flex;
+      align-self: flex-start;
+      font-size: 12px;
+      color: var(--azul);
+      background: #eaf1fb;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-weight: 800;
+    }
+
+    .btns {
+      display: grid;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    a.btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 900;
+      transition: .18s ease;
+    }
+
+    .primary { background: var(--azul); color: #fff; }
+    .primary:hover { background: var(--azul-2); }
+    .secondary { background: #fff; color: var(--azul); border: 1px solid var(--borda); }
+    .secondary:hover { border-color: var(--azul); background: #f7faff; }
+
+    .state {
+      padding: 36px;
+      text-align: center;
+      color: var(--muted);
+      background: #fff;
+      border: 1px dashed var(--borda);
+      border-radius: 16px;
+    }
+
+    .state strong {
+      display: block;
+      color: var(--texto);
+      margin-bottom: 6px;
+    }
+
+    .error { color: var(--erro); }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 0 18px 34px;
+    }
+
+    @media (max-width: 1100px) {
+      .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 780px) {
+      main { margin-top: -20px; }
+      .controls { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+      .photo-box { height: 175px; }
+      .content { padding: 12px; }
+      .product-name { font-size: 13px; min-height: 48px; }
+      header { padding-top: 24px; }
+      .panel { padding: 14px; }
+      .meta { font-size: 13px; }
+    }
+
+    @media (max-width: 480px) {
+      main { padding: 0 12px; }
+      .grid { grid-template-columns: 1fr; }
+      .photo-box { height: 255px; }
+      .product-name { font-size: 15px; min-height: auto; }
     }
   </style>
 </head>
 <body>
+  <header>
+    <div class="brand"><span class="brand-mark">E</span><span>Encaixe Componentes</span></div>
+    <h1>Catálogo de Fotos</h1>
+    <p class="subtitle">Busca interna para vendedores encontrarem, visualizarem e baixarem fotos dos produtos.</p>
+    <p id="totalProdutos">Carregando catálogo...</p>
+  </header>
 
-<header>
-  <div class="brand">
-    <div class="brand-mark">E</div>
-    <div>
-      <div class="brand-name">Encaixe Componentes</div>
-      <div class="brand-sub">Catálogo de Fotos</div>
-    </div>
-  </div>
-  <div id="totalBadge">Carregando...</div>
-</header>
-
-<div class="toolbar">
-  <div class="search-wrap">
-    <span class="search-ico">⌕</span>
-    <input id="searchInput" type="search" placeholder="Buscar produto ou categoria..." autocomplete="off" />
-  </div>
-  <select id="categorySelect"><option value="">Todas as categorias</option></select>
-  <button class="btn-clear" id="clearBtn" type="button">Limpar</button>
-  <span id="countText"></span>
-</div>
-
-<div class="layout">
-  <aside class="sidebar">
-    <div class="sidebar-label">Categorias</div>
-    <div id="catList"></div>
-  </aside>
-  <div class="content">
-    <div id="loadingGrid" class="grid">
-      <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line"></div><div class="sk-line s"></div></div></div>
-      <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line"></div><div class="sk-line s"></div></div></div>
-      <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line"></div><div class="sk-line s"></div></div></div>
-      <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line"></div><div class="sk-line s"></div></div></div>
-      <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line"></div><div class="sk-line s"></div></div></div>
-      <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line"></div><div class="sk-line s"></div></div></div>
-    </div>
-    <div id="catalog" class="grid" style="display:none;"></div>
-    <div id="emptyState" class="empty">
-      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <span>Nenhum produto encontrado</span>
-    </div>
-  </div>
-</div>
-
-<footer>Catálogo interno Encaixe · Atualizado automaticamente via Google Sheets</footer>
-
-<script>
-(function(){
-  const CSV = "/api/produtos";
-  let products = [], activeCat = "", timer = null;
-  const $=id=>document.getElementById(id);
-  const catalogEl=$("catalog"), loadingEl=$("loadingGrid"), emptyEl=$("emptyState"),
-        searchEl=$("searchInput"), selectEl=$("categorySelect"),
-        countEl=$("countText"), totalEl=$("totalBadge"),
-        clearBtn=$("clearBtn"), catList=$("catList");
-
-  function norm(v){return String(v??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();}
-  function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
-  function driveId(u){const s=String(u??"");let m=s.match(/\/d\/([^/?#]+)/);if(m)return m[1];m=s.match(/[?&]id=([^&]+)/);return m?m[1]:"";}
-  function imgUrl(p){const id=driveId(p.foto)||driveId(p.download);return id?`/api/imagem?id=${encodeURIComponent(id)}&w=600`:p.foto;}
-  function viewUrl(p){const id=driveId(p.foto)||driveId(p.download);return id?`https://drive.google.com/file/d/${id}/view`:p.foto;}
-  function dlUrl(p){const id=driveId(p.foto)||driveId(p.download);return id?`https://drive.google.com/uc?export=download&id=${id}`:(p.download||p.foto);}
-
-  function parseCSV(t){const rows=[];let row=[],val="",q=false;for(let i=0;i<t.length;i++){const c=t[i],n=t[i+1];if(c==='"'&&q&&n==='"'){val+='"';i++;}else if(c==='"'){q=!q;}else if(c===','&&!q){row.push(val);val="";}else if((c==='\n'||c==='\r')&&!q){if(c==='\r'&&n==='\n')i++;row.push(val);rows.push(row);row=[];val="";}else val+=c;}if(val||row.length){row.push(val);rows.push(row);}return rows.filter(r=>r.some(c=>c.trim()!=""));}
-
-  function catCounts(){const m=new Map();products.forEach(p=>m.set(p.categoria,(m.get(p.categoria)||0)+1));return[...m.entries()].sort((a,b)=>a[0].localeCompare(b[0],"pt-BR"));}
-
-  function buildUI(){
-    const cats=catCounts();
-    selectEl.innerHTML='<option value="">Todas as categorias</option>'+cats.map(([c,n])=>`<option value="${esc(c)}">${esc(c)} (${n})</option>`).join("");
-    catList.innerHTML=`<button class="cat-btn ${!activeCat?'active':''}" data-cat=""><span>Todas</span><span class="cat-count">${products.length}</span></button>`+cats.map(([c,n])=>`<button class="cat-btn ${activeCat===c?'active':''}" data-cat="${esc(c)}"><span>${esc(c)}</span><span class="cat-count">${n}</span></button>`).join("");
-  }
-
-  function setCat(cat){activeCat=cat??"";selectEl.value=activeCat;buildUI();render();}
-
-  function render(){
-    const term=norm(searchEl.value);
-    const list=products.filter(p=>(!activeCat||p.categoria===activeCat)&&(!term||norm(p.produto).includes(term)||norm(p.categoria).includes(term)));
-    countEl.innerHTML=`<strong>${list.length.toLocaleString("pt-BR")}</strong> de ${products.length.toLocaleString("pt-BR")} produtos`;
-    if(!list.length){catalogEl.style.display="none";emptyEl.style.display="flex";return;}
-    emptyEl.style.display="none";catalogEl.style.display="grid";
-    catalogEl.innerHTML=list.map(p=>`
-      <article class="card">
-        <div class="photo-box">
-          <img src="${esc(imgUrl(p))}" alt="${esc(p.produto)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
-          <div class="img-fallback">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-            Sem imagem
-          </div>
+  <main>
+    <section class="panel">
+      <div class="controls">
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input id="searchInput" type="search" placeholder="Pesquisar produto..." autocomplete="off" />
         </div>
-        <div class="card-body">
-          <div class="prod-name">${esc(p.produto)}</div>
-          <div class="cat-tag">${esc(p.categoria)}</div>
-          <div class="card-actions">
-            <a class="btn-dl primary" href="${esc(dlUrl(p))}" target="_blank" rel="noopener">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Baixar
-            </a>
-            <a class="btn-dl secondary" href="${esc(viewUrl(p))}" target="_blank" rel="noopener">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-              Visualizar
-            </a>
-          </div>
+
+        <div class="select-wrap">
+          <select id="categorySelect">
+            <option value="">Todas as categorias</option>
+          </select>
         </div>
-      </article>`).join("");
-  }
 
-  function debounce(fn){clearTimeout(timer);timer=setTimeout(fn,180);}
+        <button id="clearFilters" type="button">Limpar</button>
+      </div>
 
-  async function load(){
-    try{
-      const res=await fetch(CSV+"?t="+Date.now());
-      if(!res.ok)throw new Error("HTTP "+res.status);
-      const text=await res.text();
-      const rows=parseCSV(text);
-      const headers=rows.shift().map(h=>norm(h));
-      const idx={produto:headers.findIndex(h=>h==="produto"),categoria:headers.findIndex(h=>h==="categoria"),foto:headers.findIndex(h=>h.includes("link da foto")||h==="foto"),download:headers.findIndex(h=>h.includes("link de download")||h==="download")};
-      products=rows.map(r=>({produto:(r[idx.produto]??"").trim(),categoria:(r[idx.categoria]??"").trim(),foto:(r[idx.foto]??"").trim(),download:(r[idx.download]??"").trim()})).filter(p=>p.produto&&(p.foto||p.download));
-      totalEl.innerHTML=`<strong>${products.length.toLocaleString("pt-BR")}</strong> produtos`;
-      buildUI();loadingEl.style.display="none";render();
-    }catch(e){
-      console.error(e);
-      loadingEl.style.display="none";
-      totalEl.textContent="Erro ao carregar";
-      emptyEl.style.display="flex";
-      emptyEl.querySelector("span").textContent="Erro ao carregar. Verifique /api/produtos.";
+      <div class="meta">
+        <span id="countText">Carregando produtos...</span>
+        <span>Fonte: Google Sheets + Google Drive</span>
+      </div>
+    </section>
+
+    <section id="catalog" class="grid"></section>
+    <div id="emptyState" class="state" style="display:none;">
+      <strong>Nenhum produto encontrado.</strong>
+      Ajuste a busca ou limpe os filtros.
+    </div>
+  </main>
+
+  <footer>Catálogo interno Encaixe • Atualizado automaticamente pela planilha publicada.</footer>
+
+  <script>
+    const CSV_URL = "/api/produtos";
+
+    const catalogEl = document.getElementById("catalog");
+    const emptyStateEl = document.getElementById("emptyState");
+    const searchInput = document.getElementById("searchInput");
+    const categorySelect = document.getElementById("categorySelect");
+    const countText = document.getElementById("countText");
+    const totalProdutos = document.getElementById("totalProdutos");
+    const clearFilters = document.getElementById("clearFilters");
+
+    let products = [];
+
+    function parseCSV(text) {
+      const rows = [];
+      let current = [];
+      let value = "";
+      let insideQuotes = false;
+
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const next = text[i + 1];
+
+        if (char === '"' && insideQuotes && next === '"') {
+          value += '"';
+          i++;
+        } else if (char === '"') {
+          insideQuotes = !insideQuotes;
+        } else if (char === ',' && !insideQuotes) {
+          current.push(value);
+          value = "";
+        } else if ((char === "\n" || char === "\r") && !insideQuotes) {
+          if (char === "\r" && next === "\n") i++;
+          current.push(value);
+          rows.push(current);
+          current = [];
+          value = "";
+        } else {
+          value += char;
+        }
+      }
+
+      if (value || current.length) {
+        current.push(value);
+        rows.push(current);
+      }
+
+      return rows.filter(row => row.some(cell => String(cell).trim() !== ""));
     }
-  }
 
-  searchEl.addEventListener("input",()=>debounce(render));
-  selectEl.addEventListener("change",e=>setCat(e.target.value));
-  clearBtn.addEventListener("click",()=>{searchEl.value="";setCat("");});
-  catList.addEventListener("click",e=>{const b=e.target.closest(".cat-btn");if(b)setCat(b.dataset.cat??"");});
-  load();
-})();
-</script>
+    function normalize(value) {
+      return String(value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .trim();
+    }
+
+    function escapeHTML(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function extractDriveId(url) {
+      const text = String(url || "");
+      const patterns = [
+        /[?&]id=([^&]+)/,
+        /\/file\/d\/([^/]+)/,
+        /\/d\/([^/]+)/
+      ];
+
+      for (const pattern of patterns) {
+        const match = text.match(pattern);
+        if (match && match[1]) return decodeURIComponent(match[1]);
+      }
+
+      return "";
+    }
+
+    function imageUrl(product) {
+      const id = extractDriveId(product.foto) || extractDriveId(product.download);
+      if (id) return `/api/imagem?id=${encodeURIComponent(id)}`;
+      return product.foto;
+    }
+
+    function downloadUrl(product) {
+      return product.download || product.foto;
+    }
+
+    function sortProducts(list) {
+      return [...list].sort((a, b) => {
+        const catCompare = String(a.categoria).localeCompare(String(b.categoria), "pt-BR", { sensitivity: "base" });
+        if (catCompare !== 0) return catCompare;
+        return String(a.produto).localeCompare(String(b.produto), "pt-BR", { sensitivity: "base" });
+      });
+    }
+
+    function setupCategories() {
+      const categories = [...new Set(products.map(p => p.categoria).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b, "pt-BR", { sensitivity: "base" }));
+
+      categorySelect.innerHTML = '<option value="">Todas as categorias</option>' +
+        categories.map(cat => {
+          const total = products.filter(p => p.categoria === cat).length;
+          return `<option value="${escapeHTML(cat)}">${escapeHTML(cat)} (${total})</option>`;
+        }).join("");
+    }
+
+    function render() {
+      const term = normalize(searchInput.value);
+      const category = categorySelect.value;
+
+      const filtered = sortProducts(products.filter(product => {
+        const matchesTerm = !term ||
+          normalize(product.produto).includes(term) ||
+          normalize(product.categoria).includes(term);
+
+        const matchesCategory = !category || product.categoria === category;
+
+        return matchesTerm && matchesCategory;
+      }));
+
+      countText.textContent = `${filtered.length} de ${products.length} produtos encontrados`;
+      emptyStateEl.style.display = filtered.length ? "none" : "block";
+      catalogEl.style.display = filtered.length ? "grid" : "none";
+
+      catalogEl.innerHTML = filtered.map(product => {
+        const foto = imageUrl(product);
+        const download = downloadUrl(product);
+
+        return `
+          <article class="card">
+            <div class="photo-box">
+              <img
+                src="${escapeHTML(foto)}"
+                alt="${escapeHTML(product.produto)}"
+                loading="lazy"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+              />
+              <div class="image-fallback">Imagem indisponível</div>
+            </div>
+
+            <div class="content">
+              <div class="product-name">${escapeHTML(product.produto)}</div>
+              <div class="category">${escapeHTML(product.categoria)}</div>
+
+              <div class="btns">
+                <a class="btn primary" href="${escapeHTML(download)}" target="_blank" rel="noopener">⬇ Baixar Foto</a>
+                <a class="btn secondary" href="${escapeHTML(product.foto)}" target="_blank" rel="noopener">Visualizar</a>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    async function loadProducts() {
+      try {
+        const response = await fetch(CSV_URL + "?cacheBust=" + Date.now());
+        if (!response.ok) throw new Error("Falha ao carregar CSV");
+
+        const text = await response.text();
+        const rows = parseCSV(text);
+        const headers = rows.shift().map(h => normalize(h));
+
+        const idxProduto = headers.findIndex(h => h === "produto");
+        const idxCategoria = headers.findIndex(h => h === "categoria");
+        const idxFoto = headers.findIndex(h => h.includes("link da foto") || h === "foto");
+        const idxDownload = headers.findIndex(h => h.includes("link de download") || h === "download");
+
+        products = sortProducts(rows.map(row => ({
+          produto: row[idxProduto] || "",
+          categoria: row[idxCategoria] || "",
+          foto: row[idxFoto] || "",
+          download: row[idxDownload] || ""
+        })).filter(p => p.produto && (p.foto || p.download)));
+
+        totalProdutos.textContent = `${products.length} produtos cadastrados`;
+        setupCategories();
+        render();
+      } catch (error) {
+        console.error(error);
+        totalProdutos.textContent = "Erro ao carregar catálogo";
+        countText.innerHTML = '<span class="error">Não foi possível carregar os produtos.</span>';
+        emptyStateEl.style.display = "block";
+        emptyStateEl.innerHTML = "<strong>Erro ao carregar catálogo.</strong> Verifique se a API /api/produtos está funcionando.";
+      }
+    }
+
+    searchInput.addEventListener("input", render);
+    categorySelect.addEventListener("change", render);
+    clearFilters.addEventListener("click", () => {
+      searchInput.value = "";
+      categorySelect.value = "";
+      render();
+      searchInput.focus();
+    });
+
+    loadProducts();
+  </script>
 </body>
 </html>
